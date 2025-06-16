@@ -189,6 +189,26 @@
           color: var(--accent-color);
         }
 
+        .scanning-mode .video-container,
+        .scanning-mode .scan-line {
+          display: block;
+        }
+
+        .scanning-mode .result-container,
+        .scanning-mode .cartela-result {
+          display: none;
+        }
+
+        .result-mode .video-container,
+        .result-mode .scan-line {
+          display: none;
+        }
+
+        .result-mode .result-container,
+        .result-mode .cartela-result {
+          display: block;
+        }
+
         @media (max-width: 480px) {
           .video-container {
             height: 250px;
@@ -212,7 +232,7 @@
         </header>
 
         <main>
-            <section class="qr-reader-area">
+            <section class="qr-reader-area scanning-mode" id="qr-reader-area">
                 <div class="video-container">
                     <video id="qr-video" playsinline></video>
                     <div class="scan-line"></div>
@@ -283,6 +303,7 @@
         const cartelaResult = document.getElementById('cartela-result');
         const scanAgainBtn = document.getElementById('scan-again-btn');
         const statusMessage = document.getElementById('status-message');
+        const qrReaderArea = document.getElementById('qr-reader-area');
 
         // Variáveis de estado
         let scanning = true;
@@ -302,12 +323,9 @@
                     } 
                 });
                 qrVideo.srcObject = stream;
-                qrVideo.play().then(() => {
-                    scanQRCode();
-                }).catch(err => {
-                    console.error("Erro ao reproduzir vídeo:", err);
-                    showStatus("Erro ao acessar a câmera", "error");
-                });
+                await qrVideo.play();
+                setScanningMode();
+                scanQRCode();
             } catch (err) {
                 console.error("Erro ao acessar a câmera:", err);
                 showStatus("Não foi possível acessar a câmera. Verifique as permissões.", "error");
@@ -324,6 +342,20 @@
                 cancelAnimationFrame(animationFrameId);
                 animationFrameId = null;
             }
+        }
+
+        // Modo de escaneamento (mostra câmera)
+        function setScanningMode() {
+            qrReaderArea.classList.remove('result-mode');
+            qrReaderArea.classList.add('scanning-mode');
+            scanAgainBtn.classList.add('hidden');
+        }
+
+        // Modo de resultado (mostra apenas resultados)
+        function setResultMode() {
+            qrReaderArea.classList.remove('scanning-mode');
+            qrReaderArea.classList.add('result-mode');
+            scanAgainBtn.classList.remove('hidden');
         }
 
         // Função para escanear continuamente o QR Code
@@ -361,6 +393,7 @@
         function handleQRCodeDetected(qrData) {
             scanning = false;
             stopCamera();
+            setResultMode();
             
             showQRResult(qrData);
             identifyCartela(qrData);
@@ -369,7 +402,6 @@
         // Mostrar resultado do QR Code
         function showQRResult(data) {
             qrResult.textContent = `Código lido: ${data}`;
-            qrResult.style.display = 'block';
         }
 
         // Identificar número da cartela
@@ -377,18 +409,14 @@
             const numeroCartela = cartelas[qrData];
             
             if (numeroCartela !== undefined) {
-                cartelaResult.textContent = `Cartela ${numeroCartela} - Parabéns!`;
-                cartelaResult.style.display = 'block';
+                cartelaResult.textContent = `Cartela ${numeroCartela} - Válida!`;
                 cartelaResult.style.color = 'var(--success-color)';
                 showStatus("Cartela válida identificada!", "success");
             } else {
                 cartelaResult.textContent = "Cartela não identificada";
-                cartelaResult.style.display = 'block';
-                cartelaResult.style.color = 'var(--error)';
+                cartelaResult.style.color = 'var(--accent-color)';
                 showStatus("Código QR não corresponde a nenhuma cartela válida", "error");
             }
-            
-            scanAgainBtn.classList.remove('hidden');
         }
 
         // Botão para ler outra cartela
@@ -399,11 +427,10 @@
 
         // Resetar o scanner
         function resetScanner() {
-            qrResult.style.display = 'none';
-            cartelaResult.style.display = 'none';
-            scanAgainBtn.classList.add('hidden');
-            statusMessage.classList.add('hidden');
             scanning = true;
+            qrResult.textContent = '';
+            cartelaResult.textContent = '';
+            statusMessage.classList.add('hidden');
         }
 
         // Mostrar mensagens de status
