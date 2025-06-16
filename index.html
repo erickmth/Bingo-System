@@ -7,6 +7,38 @@
     <link rel="icon" type="image/x-icon" href="favicon.png">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Pré-carregamento das imagens (cache) -->
+    <link rel="preload" as="image" href="imagens/milho.png">
+    <link rel="preload" as="image" href="imagens/fogueira.png">
+    <link rel="preload" as="image" href="imagens/balão.png">
+    <link rel="preload" as="image" href="imagens/chapéu.png">
+    <link rel="preload" as="image" href="imagens/paçoca.png">
+    <link rel="preload" as="image" href="imagens/quentão.png">
+    <link rel="preload" as="image" href="imagens/canjica.png">
+    <link rel="preload" as="image" href="imagens/bandeirinha.png">
+    <link rel="preload" as="image" href="imagens/sanfona.png">
+    <link rel="preload" as="image" href="imagens/quadrilha.png">
+    <link rel="preload" as="image" href="imagens/pé-de-moleque.png">
+    <link rel="preload" as="image" href="imagens/cuscuz.png">
+    <link rel="preload" as="image" href="imagens/pinhão.png">
+    <link rel="preload" as="image" href="imagens/bolo.png">
+    <link rel="preload" as="image" href="imagens/cocada.png">
+    <link rel="preload" as="image" href="imagens/curau.png">
+    <link rel="preload" as="image" href="imagens/casal.png">
+    <link rel="preload" as="image" href="imagens/pescaria.png">
+    <link rel="preload" as="image" href="imagens/argola.png">
+    <link rel="preload" as="image" href="imagens/corrida-de-saco.png">
+    <link rel="preload" as="image" href="imagens/pau-de-sebo.png">
+    <link rel="preload" as="image" href="imagens/tiro-ao-alvo.png">
+    <link rel="preload" as="image" href="imagens/boca-do-palhaço.png">
+    <link rel="preload" as="image" href="imagens/espantalho.png">
+    <link rel="preload" as="image" href="imagens/tecido.png">
+    <link rel="preload" as="image" href="imagens/arroz.png">
+    <link rel="preload" as="image" href="imagens/maca-do-amor.png">
+    <link rel="preload" as="image" href="imagens/pipoca.png">
+    <link rel="preload" as="image" href="imagens/cachorro-quente.png">
+    <link rel="preload" as="image" href="imagens/bingo.png">
 </head>
 <body>
     <div class="container">
@@ -45,7 +77,6 @@
         </main>
     </div>
 
-    <!-- Popup de Bingo -->
     <div id="bingoPopup" class="popup">
         <div class="popup-content">
             <span class="close-popup">&times;</span>
@@ -67,5 +98,46 @@
     </div>
 
     <script src="script.js"></script>
+
+    <!-- Pré-carregamento de imagens via JS para forçar o cache -->
+    <script>
+        const imagens = [
+            "imagens/milho.png",
+            "imagens/fogueira.png",
+            "imagens/balão.png",
+            "imagens/chapéu.png",
+            "imagens/paçoca.png",
+            "imagens/quentão.png",
+            "imagens/canjica.png",
+            "imagens/bandeirinha.png",
+            "imagens/sanfona.png",
+            "imagens/quadrilha.png",
+            "imagens/pé-de-moleque.png",
+            "imagens/cuscuz.png",
+            "imagens/pinhão.png",
+            "imagens/bolo.png",
+            "imagens/cocada.png",
+            "imagens/curau.png",
+            "imagens/casal.png",
+            "imagens/pescaria.png",
+            "imagens/argola.png",
+            "imagens/corrida-de-saco.png",
+            "imagens/pau-de-sebo.png",
+            "imagens/tiro-ao-alvo.png",
+            "imagens/boca-do-palhaço.png",
+            "imagens/espantalho.png",
+            "imagens/tecido.png",
+            "imagens/arroz.png",
+            "imagens/maca-do-amor.png",
+            "imagens/pipoca.png",
+            "imagens/cachorro-quente.png",
+            "imagens/bingo.png"
+        ];
+
+        imagens.forEach(src => {
+            const img = new Image();
+            img.src = src;
+        });
+    </script>
 </body>
 </html>
