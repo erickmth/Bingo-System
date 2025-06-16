@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leitor de QR Code - Identificação de Cartela</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <style>
+        :root {
+          --primary-color: #2c3e50;
+          --secondary-color: #ec3333;
+          --accent-color: #e74c3c;
+          --light-color: #ecf0f1;
+          --dark-color: #2c3e50;
+          --success-color: #27ae60;
+          --warning-color: #f39c12;
+          --border-radius: 12px;
+          --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        body {
+          font-family: 'Roboto', sans-serif;
+          background-color: #f5f7fa;
+          color: var(--dark-color);
+          line-height: 1.6;
+        }
+
+        .container {
+          max-width: 800px;
+          width: 95%;
+          margin: 0 auto;
+          padding: 20px;
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        header {
+          text-align: center;
+          margin-bottom: 30px;
+        }
+
+        header h1 {
+          color: var(--primary-color);
+          font-size: 1.8rem;
+          margin-bottom: 15px;
+        }
+
+        .qr-reader-area {
+          width: 100%;
+          max-width: 500px;
+          background-color: white;
+          border-radius: var(--border-radius);
+          padding: 20px;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .video-container {
+          width: 100%;
+          height: 300px;
+          background-color: var(--light-color);
+          border-radius: var(--border-radius);
+          overflow: hidden;
+          margin-bottom: 20px;
+          position: relative;
+        }
+
+        #qr-video {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .scan-line {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 3px;
+          background-color: var(--accent-color);
+          animation: scan 2s infinite linear;
+          box-shadow: 0 0 10px rgba(231, 76, 60, 0.7);
+        }
+
+        @keyframes scan {
+          0% { top: 0; }
+          100% { top: 100%; }
+        }
+
+        .result-container {
+          width: 100%;
+          margin-top: 15px;
+          padding: 15px;
+          background-color: var(--light-color);
+          border-radius: var(--border-radius);
+          word-break: break-all;
+          text-align: center;
+          font-size: 1rem;
+          display: none;
+        }
+
+        .cartela-result {
+          font-size: 1.5rem;
+          font-weight: bold;
+          color: var(--secondary-color);
+          margin-top: 10px;
+          display: none;
+        }
+
+        .action-buttons {
+          display: flex;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 15px;
+          margin-top: 20px;
+          width: 100%;
+        }
+
+        .btn {
+          padding: 12px 24px;
+          border: none;
+          border-radius: var(--border-radius);
+          font-size: 1rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.3s;
+          min-width: 160px;
+        }
+
+        .btn-primary {
+          background-color: var(--secondary-color);
+          color: white;
+        }
+
+        .btn-primary:hover {
+          background-color: var(--accent-color);
+        }
+
+        .btn-secondary {
+          background-color: var(--primary-color);
+          color: white;
+        }
+
+        .btn-secondary:hover {
+          background-color: #34495e;
+        }
+
+        .btn-success {
+          background-color: var(--success-color);
+          color: white;
+        }
+
+        .btn-success:hover {
+          background-color: #219653;
+        }
+
+        .hidden {
+          display: none;
+        }
+
+        .status-message {
+          margin-top: 15px;
+          padding: 10px 15px;
+          border-radius: var(--border-radius);
+          font-size: 0.9rem;
+          text-align: center;
+          width: 100%;
+        }
+
+        .success {
+          background-color: rgba(39, 174, 96, 0.2);
+          color: var(--success-color);
+        }
+
+        .error {
+          background-color: rgba(231, 76, 60, 0.2);
+          color: var(--accent-color);
+        }
+
+        @media (max-width: 480px) {
+          .video-container {
+            height: 250px;
+          }
+          
+          header h1 {
+            font-size: 1.5rem;
+          }
+          
+          .btn {
+            padding: 10px 15px;
+            min-width: 120px;
+          }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Leitor de QR Code - Cartelas</h1>
+        </header>
+
+        <main>
+            <section class="qr-reader-area">
+                <div class="video-container">
+                    <video id="qr-video" playsinline></video>
+                    <div class="scan-line"></div>
+                </div>
+                <div class="result-container" id="qr-result"></div>
+                <div class="cartela-result" id="cartela-result"></div>
+                <div class="action-buttons">
+                    <button id="scan-again-btn" class="btn btn-primary hidden">Ler Outra Cartela</button>
+                </div>
+                <div id="status-message" class="status-message hidden"></div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Mapeamento dos códigos QR para números de cartela
+        const cartelas = {
+            "B7X2QF": 1,
+            "T5L9WA": 2,
+            "D2M8ZR": 3,
+            "F8N4KY": 4,
+            "H3P7VX": 5,
+            "Q6J2ML": 6,
+            "X4W8RD": 7,
+            "L9K5YT": 8,
+            "R3V7ZN": 9,
+            "U8S4KP": 10,
+            "C6N3VB": 11,
+            "M2J9QX": 12,
+            "Z5F1LY": 13,
+            "Y7L3PU": 14,
+            "V4N6TD": 15,
+            "N8K5WM": 16,
+            "A3X9RL": 17,
+            "G6B2YU": 18,
+            "P5V4NX": 19,
+            "S7M1QK": 20,
+            "K2F9WL": 21,
+            "J8D6XP": 22,
+            "W4N3YV": 23,
+            "R1K7LM": 24,
+            "X6T2QF": 25,
+            "L9J4WP": 26,
+            "U5V2MK": 27,
+            "Q7X3NL": 28,
+            "M6W8RK": 29,
+            "F2L9TP": 30,
+            "B3K7XM": 31,
+            "D9V1RQ": 32,
+            "Y2N4WL": 33,
+            "G5K8MV": 34,
+            "N1F3TP": 35,
+            "V7W5QL": 36,
+            "H4J9XN": 37,
+            "K9X2LP": 38,
+            "S3N7QV": 39,
+            "R6M5WK": 40,
+            "P8L2XJ": 41,
+            "J3K6YM": 42,
+            "X9V7RP": 43,
+            "M4N8TL": 44,
+            "W1X5QF": 45
+        };
+
+        // Elementos da interface
+        const qrVideo = document.getElementById('qr-video');
+        const qrResult = document.getElementById('qr-result');
+        const cartelaResult = document.getElementById('cartela-result');
+        const scanAgainBtn = document.getElementById('scan-again-btn');
+        const statusMessage = document.getElementById('status-message');
+
+        // Variáveis de estado
+        let scanning = true;
+        let stream = null;
+
+        // Iniciar a câmera automaticamente
+        async function startCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        facingMode: "environment",
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    } 
+                });
+                qrVideo.srcObject = stream;
+                await qrVideo.play();
+                scanQRCode();
+            } catch (err) {
+                console.error("Erro ao acessar a câmera:", err);
+                showStatus("Não foi possível acessar a câmera. Verifique as permissões.", "error");
+            }
+        }
+
+        // Função para escanear continuamente o QR Code
+        function scanQRCode() {
+            if (!scanning) return;
+
+            if (qrVideo.readyState === qrVideo.HAVE_ENOUGH_DATA) {
+                const canvas = document.createElement('canvas');
+                canvas.width = qrVideo.videoWidth;
+                canvas.height = qrVideo.videoHeight;
+                const context = canvas.getContext('2d');
+                context.drawImage(qrVideo, 0, 0, canvas.width, canvas.height);
+                
+                try {
+                    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                    const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                        inversionAttempts: "dontInvert",
+                    });
+
+                    if (code) {
+                        const qrData = code.data.trim();
+                        showQRResult(qrData);
+                        identifyCartela(qrData);
+                        scanning = false;
+                    }
+                } catch (e) {
+                    console.error("Erro ao ler QR Code:", e);
+                }
+            }
+
+            if (scanning) {
+                requestAnimationFrame(scanQRCode);
+            }
+        }
+
+        // Mostrar resultado do QR Code
+        function showQRResult(data) {
+            qrResult.textContent = `Código lido: ${data}`;
+            qrResult.style.display = 'block';
+        }
+
+        // Identificar número da cartela
+        function identifyCartela(qrData) {
+            const numeroCartela = cartelas[qrData];
+            
+            if (numeroCartela) {
+                cartelaResult.textContent = `Cartela ${numeroCartela} - Parabéns!`;
+                cartelaResult.style.display = 'block';
+                scanAgainBtn.classList.remove('hidden');
+                
+                // Tocar um som de confirmação (opcional)
+                playSuccessSound();
+            } else {
+                cartelaResult.textContent = "Cartela não identificada";
+                cartelaResult.style.display = 'block';
+                scanAgainBtn.classList.remove('hidden');
+            }
+        }
+
+        // Tocar som de sucesso (opcional)
+        function playSuccessSound() {
+            const audio = new Audio();
+            audio.src = "data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU..."; // Som curto base64
+            audio.play().catch(e => console.log("Não foi possível tocar o som:", e));
+        }
+
+        // Botão para ler outra cartela
+        scanAgainBtn.addEventListener('click', () => {
+            qrResult.style.display = 'none';
+            cartelaResult.style.display = 'none';
+            scanAgainBtn.classList.add('hidden');
+            scanning = true;
+            scanQRCode();
+        });
+
+        // Mostrar mensagens de status
+        function showStatus(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.classList.remove('hidden', 'success', 'error', 'info');
+            statusMessage.classList.add(type);
+            
+            // Esconder após 3 segundos
+            setTimeout(() => {
+                statusMessage.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            startCamera();
+        });
+    </script>
+</body>
+</html>
