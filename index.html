@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bingo Junino - INRB</title>
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="imagens/logo.svg" alt="Logo INRB" class="logo">
+            <h1>Bingo Junino - INRB</h1>
+            <div class="creditos">Criado por Erick Matheus - Formare 2025</div>
+        </header>
+
+        <main class="main-content">
+            <div class="bingo-container">
+                <div class="sorteio-area">
+                    <div class="current-image" id="imagemSorteada">
+                        <p>Clique em "Sortear" para começar!</p>
+                    </div>
+                    <button id="btnSortear" class="btn-sortear">Sortear Imagem</button>
+                    <button id="btnBingo" class="btn-bingo">🎉 BINGO!</button>
+                </div>
+
+                <div class="right-panel">
+                    <div class="historico">
+                        <h2>Últimos 3 Sorteados</h2>
+                        <div id="listaSorteados" class="sorteados-grid"></div>
+                    </div>
+
+                    <div class="vencedores-box">
+                        <h2>Vencedores</h2>
+                        <div class="vencedores-list">
+                            <div class="vencedor" id="vencedor1">1º Lugar🥇 - </div>
+                            <div class="vencedor" id="vencedor2">2º Lugar🥈 - </div>
+                            <div class="vencedor" id="vencedor3">3º Lugar🥉 - </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Popup de Bingo -->
+    <div id="bingoPopup" class="popup">
+        <div class="popup-content">
+            <span class="close-popup">&times;</span>
+            <h2>Registrar Bingo</h2>
+            <div class="form-group">
+                <label for="vencedorNome">Nome do Vencedor:</label>
+                <input type="text" id="vencedorNome" placeholder="Digite o nome">
+            </div>
+            <div class="form-group">
+                <label for="pesquisaItem">Pesquisar Item:</label>
+                <input type="text" id="pesquisaItem" placeholder="Digite para filtrar">
+            </div>
+            <div class="itens-sorteados-container">
+                <h3>Itens Sorteados</h3>
+                <div id="itensSorteadosLista" class="itens-sorteados-lista"></div>
+            </div>
+            <button id="confirmarBingo" class="btn-confirmar">Confirmar</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
