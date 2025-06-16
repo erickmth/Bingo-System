@@ -287,10 +287,13 @@
         // Variáveis de estado
         let scanning = true;
         let stream = null;
+        let animationFrameId = null;
 
         // Iniciar a câmera automaticamente
         async function startCamera() {
             try {
+                stopCamera(); // Parar qualquer stream existente
+                
                 stream = await navigator.mediaDevices.getUserMedia({ 
                     video: { 
                         facingMode: "environment",
@@ -299,11 +302,27 @@
                     } 
                 });
                 qrVideo.srcObject = stream;
-                await qrVideo.play();
-                scanQRCode();
+                qrVideo.play().then(() => {
+                    scanQRCode();
+                }).catch(err => {
+                    console.error("Erro ao reproduzir vídeo:", err);
+                    showStatus("Erro ao acessar a câmera", "error");
+                });
             } catch (err) {
                 console.error("Erro ao acessar a câmera:", err);
                 showStatus("Não foi possível acessar a câmera. Verifique as permissões.", "error");
+            }
+        }
+
+        // Parar a câmera
+        function stopCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                qrVideo.srcObject = null;
+            }
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
             }
         }
 
@@ -326,9 +345,7 @@
 
                     if (code) {
                         const qrData = code.data.trim();
-                        showQRResult(qrData);
-                        identifyCartela(qrData);
-                        scanning = false;
+                        handleQRCodeDetected(qrData);
                     }
                 } catch (e) {
                     console.error("Erro ao ler QR Code:", e);
@@ -336,8 +353,17 @@
             }
 
             if (scanning) {
-                requestAnimationFrame(scanQRCode);
+                animationFrameId = requestAnimationFrame(scanQRCode);
             }
+        }
+
+        // Lidar com o QR code detectado
+        function handleQRCodeDetected(qrData) {
+            scanning = false;
+            stopCamera();
+            
+            showQRResult(qrData);
+            identifyCartela(qrData);
         }
 
         // Mostrar resultado do QR Code
@@ -350,51 +376,51 @@
         function identifyCartela(qrData) {
             const numeroCartela = cartelas[qrData];
             
-            if (numeroCartela) {
+            if (numeroCartela !== undefined) {
                 cartelaResult.textContent = `Cartela ${numeroCartela} - Parabéns!`;
                 cartelaResult.style.display = 'block';
-                scanAgainBtn.classList.remove('hidden');
-                
-                // Tocar um som de confirmação (opcional)
-                playSuccessSound();
+                cartelaResult.style.color = 'var(--success-color)';
+                showStatus("Cartela válida identificada!", "success");
             } else {
                 cartelaResult.textContent = "Cartela não identificada";
                 cartelaResult.style.display = 'block';
-                scanAgainBtn.classList.remove('hidden');
+                cartelaResult.style.color = 'var(--error)';
+                showStatus("Código QR não corresponde a nenhuma cartela válida", "error");
             }
-        }
-
-        // Tocar som de sucesso (opcional)
-        function playSuccessSound() {
-            const audio = new Audio();
-            audio.src = "data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU..."; // Som curto base64
-            audio.play().catch(e => console.log("Não foi possível tocar o som:", e));
+            
+            scanAgainBtn.classList.remove('hidden');
         }
 
         // Botão para ler outra cartela
         scanAgainBtn.addEventListener('click', () => {
+            resetScanner();
+            startCamera();
+        });
+
+        // Resetar o scanner
+        function resetScanner() {
             qrResult.style.display = 'none';
             cartelaResult.style.display = 'none';
             scanAgainBtn.classList.add('hidden');
+            statusMessage.classList.add('hidden');
             scanning = true;
-            scanQRCode();
-        });
+        }
 
         // Mostrar mensagens de status
         function showStatus(message, type) {
             statusMessage.textContent = message;
             statusMessage.classList.remove('hidden', 'success', 'error', 'info');
             statusMessage.classList.add(type);
-            
-            // Esconder após 3 segundos
-            setTimeout(() => {
-                statusMessage.classList.add('hidden');
-            }, 3000);
         }
 
         // Inicialização
         document.addEventListener('DOMContentLoaded', () => {
             startCamera();
+        });
+
+        // Limpar ao sair
+        window.addEventListener('beforeunload', () => {
+            stopCamera();
         });
     </script>
 </body>
