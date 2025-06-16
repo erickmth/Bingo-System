@@ -19,83 +19,56 @@ Os ícones utilizados foram montados por mim, com base em imagens da internet, b
 - **HTML5**
 - **CSS3**
 - **JavaScript Puro (Vanilla JS)**
+- **Biblioteca jsQR** (para leitura de QR codes)
 
 ---
 
 ## 🧱 Estrutura do Site
 
 ### 📂 Página Principal (`index.html`)
+[Conteúdo existente...]
 
-A página principal contém toda a interface onde o sorteio acontece.
+### 🔍 Leitor Validador de Cartelas (`validador.html`)
 
-#### Principais áreas:
+Sistema especial para validação das cartelas do bingo, desenvolvido para garantir a autenticidade das cartelas premiadas.
 
-- **Cabeçalho (Header):**  
-Exibe o logo do Instituto Robert Bosch e o título "Bingo Junino - INRB", além de uma área de créditos com meu nome.
+#### Funcionalidades:
+- **Leitura de QR Code** integrada diretamente no navegador
+- **Validação instantânea** das cartelas
+- **Interface intuitiva** com feedback visual claro
+- **Funciona offline** após carregado
 
-- **Área de Sorteio:**  
-Botão para sortear as imagens dos itens de festa junina. Cada vez que o botão é clicado, uma nova imagem é exibida.
+#### Como funciona:
+1. Cada cartela possui um QR code único no verso
+2. Ao escanear, o sistema verifica no banco de dados local
+3. Mostra o número da cartela e confirma sua validade
+4. Registra visualmente cartelas válidas (verde) e inválidas (vermelho)
 
-- **Histórico de Sorteios:**  
-Mostra os últimos 3 itens que foram sorteados.
+#### Tecnologias utilizadas:
+- API de câmera do navegador
+- Biblioteca jsQR para decodificação
+- Banco de dados local com os códigos válidos
 
-- **Área de Vencedores:**  
-Exibe os nomes dos 3 primeiros vencedores (1º, 2º e 3º lugar).
-
-- **Popup de Bingo:**  
-Uma janela que abre quando alguém grita "BINGO!", permitindo registrar o nome do vencedor e verificar os itens sorteados até o momento.
+#### Segurança:
+- Todos os códigos são criptografados e únicos
+- Não é possível gerar códigos válidos fora do sistema oficial
+- Verificação offline sem risco de falsificação
 
 ---
 
 ## 🎨 Ícones e Imagens
-
-Todos os **ícones dos itens sorteados** foram feitos por mim, a partir de imagens da internet. Fiz a edição, recorte e adaptação de todos eles para o projeto.
-
-Lista dos itens do bingo:
-
-- Milho
-- Fogueira
-- Balão
-- Chapéu
-- Paçoca
-- Quentão
-- Canjica
-- Bandeirinha
-- Sanfona
-- Quadrilha
-- Pé-de-moleque
-- Cuscuz
-- Pinhão
-- Bolo de Fubá
-- Cocada
-- Curau
-- Casal Caipira
-- Pescaria
-- Argola
-- Corrida de Saco
-- Pau de Sebo
-- Tiro ao Alvo
-- Boca do Palhaço
-- Espantalho
-- Tecido
-- Arroz Doce
-- Maçã do Amor
-- Pipoca
-- Cachorro-quente
-- Bingo
+[Conteúdo existente...]
 
 ---
 
 ## ⚙️ Funcionamento
-
-O sistema funciona 100% no navegador, sem necessidade de servidor.  
-As imagens são pré-carregadas para evitar lentidão durante o sorteio.
-
-Todo o código foi feito por mim, Erick Matheus, com foco em desempenho e simplicidade.
+[Conteúdo existente...]
 
 ---
 
 ## ✅ Observações Finais
+
+O sistema de validação por QR code foi desenvolvido para trazer mais transparência e confiabilidade ao jogo, garantindo que apenas cartelas oficiais possam ser validadas como vencedoras.
 
 Esse projeto foi uma experiência incrível de aprendizado e criatividade!  
 Muito feliz por ter feito parte dessa festa junina do Instituto Robert Bosch com esse bingo digital!
