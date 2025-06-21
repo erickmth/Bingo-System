@@ -7,38 +7,6 @@
     <link rel="icon" type="image/x-icon" href="favicon.png">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-
-    <!-- Pré-carregamento das imagens (cache) -->
-    <link rel="preload" as="image" href="imagens/milho.png">
-    <link rel="preload" as="image" href="imagens/fogueira.png">
-    <link rel="preload" as="image" href="imagens/balão.png">
-    <link rel="preload" as="image" href="imagens/chapéu.png">
-    <link rel="preload" as="image" href="imagens/paçoca.png">
-    <link rel="preload" as="image" href="imagens/quentão.png">
-    <link rel="preload" as="image" href="imagens/canjica.png">
-    <link rel="preload" as="image" href="imagens/bandeirinha.png">
-    <link rel="preload" as="image" href="imagens/sanfona.png">
-    <link rel="preload" as="image" href="imagens/quadrilha.png">
-    <link rel="preload" as="image" href="imagens/pé-de-moleque.png">
-    <link rel="preload" as="image" href="imagens/cuscuz.png">
-    <link rel="preload" as="image" href="imagens/pinhão.png">
-    <link rel="preload" as="image" href="imagens/bolo.png">
-    <link rel="preload" as="image" href="imagens/cocada.png">
-    <link rel="preload" as="image" href="imagens/curau.png">
-    <link rel="preload" as="image" href="imagens/casal.png">
-    <link rel="preload" as="image" href="imagens/pescaria.png">
-    <link rel="preload" as="image" href="imagens/argola.png">
-    <link rel="preload" as="image" href="imagens/corrida-de-saco.png">
-    <link rel="preload" as="image" href="imagens/pau-de-sebo.png">
-    <link rel="preload" as="image" href="imagens/tiro-ao-alvo.png">
-    <link rel="preload" as="image" href="imagens/boca-do-palhaço.png">
-    <link rel="preload" as="image" href="imagens/espantalho.png">
-    <link rel="preload" as="image" href="imagens/tecido.png">
-    <link rel="preload" as="image" href="imagens/arroz.png">
-    <link rel="preload" as="image" href="imagens/maca-do-amor.png">
-    <link rel="preload" as="image" href="imagens/pipoca.png">
-    <link rel="preload" as="image" href="imagens/cachorro-quente.png">
-    <link rel="preload" as="image" href="imagens/bingo.png">
 </head>
 <body>
     <div class="container">
@@ -77,6 +45,7 @@
         </main>
     </div>
 
+    <!-- Popup de Bingo -->
     <div id="bingoPopup" class="popup">
         <div class="popup-content">
             <span class="close-popup">&times;</span>
@@ -98,83 +67,73 @@
     </div>
 
     <script src="script.js"></script>
-
-    <!-- Pré-carregamento de imagens via JS para forçar o cache -->
     <script>
-        const imagens = [
-            "imagens/milho.png",
-            "imagens/fogueira.png",
-            "imagens/balão.png",
-            "imagens/chapéu.png",
-            "imagens/paçoca.png",
-            "imagens/quentão.png",
-            "imagens/canjica.png",
-            "imagens/bandeirinha.png",
-            "imagens/sanfona.png",
-            "imagens/quadrilha.png",
-            "imagens/pé-de-moleque.png",
-            "imagens/cuscuz.png",
-            "imagens/pinhão.png",
-            "imagens/bolo.png",
-            "imagens/cocada.png",
-            "imagens/curau.png",
-            "imagens/casal.png",
-            "imagens/pescaria.png",
-            "imagens/argola.png",
-            "imagens/corrida-de-saco.png",
-            "imagens/pau-de-sebo.png",
-            "imagens/tiro-ao-alvo.png",
-            "imagens/boca-do-palhaço.png",
-            "imagens/espantalho.png",
-            "imagens/tecido.png",
-            "imagens/arroz.png",
-            "imagens/maca-do-amor.png",
-            "imagens/pipoca.png",
-            "imagens/cachorro-quente.png",
-            "imagens/bingo.png"
-        ];
+        // Função para buscar dados do jsonbin.io
+        async function fetchWinners() {
+            try {
+                const response = await fetch('https://api.jsonbin.io/v3/b/68523cc48561e97a5026386a/latest', {
+                    headers: {
+                        'X-Master-Key': '$2a$10$nGC0x4ZGIrrDOp.2XXhZ1.Fb9T2T.Fk05XB418S.9LZrzsdMvVHuS'
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Erro ao buscar dados');
+                
+                const data = await response.json();
+                const participantes = data.record.participantes || [];
+                
+                // Atualiza os vencedores na tela na ordem 3º, 2º, 1º
+                if (participantes.length >= 1) {
+                    document.getElementById('vencedor3').textContent = `3º Lugar🥉 ${participantes[participantes.length-1]}`;
+                }
+                if (participantes.length >= 2) {
+                    document.getElementById('vencedor2').textContent = `2º Lugar🥈 ${participantes[participantes.length-2]}`;
+                }
+                if (participantes.length >= 3) {
+                    document.getElementById('vencedor1').textContent = `1º Lugar🥇 ${participantes[participantes.length-3]}`;
+                }
+            } catch (error) {
+                console.error('Erro ao atualizar vencedores:', error);
+            }
+        }
 
-        imagens.forEach(src => {
-            const img = new Image();
-            img.src = src;
-        });
+        // Polling a cada 3 segundos
+        setInterval(fetchWinners, 3000);
+        
+        // Busca inicial
+        fetchWinners();
     </script>
-
-
-<div style="display:none;">
-    <img src="imagens/milho.png">
-    <img src="imagens/fogueira.png">
-    <img src="imagens/balão.png">
-    <img src="imagens/chapéu.png">
-    <img src="imagens/paçoca.png">
-    <img src="imagens/quentão.png">
-    <img src="imagens/canjica.png">
-    <img src="imagens/bandeirinha.png">
-    <img src="imagens/sanfona.png">
-    <img src="imagens/quadrilha.png">
-    <img src="imagens/pé-de-moleque.png">
-    <img src="imagens/cuscuz.png">
-    <img src="imagens/pinhão.png">
-    <img src="imagens/bolo.png">
-    <img src="imagens/cocada.png">
-    <img src="imagens/curau.png">
-    <img src="imagens/casal.png">
-    <img src="imagens/pescaria.png">
-    <img src="imagens/argola.png">
-    <img src="imagens/corrida-de-saco.png">
-    <img src="imagens/pau-de-sebo.png">
-    <img src="imagens/tiro-ao-alvo.png">
-    <img src="imagens/boca-do-palhaço.png">
-    <img src="imagens/espantalho.png">
-    <img src="imagens/tecido.png">
-    <img src="imagens/arroz.png">
-    <img src="imagens/maca-do-amor.png">
-    <img src="imagens/pipoca.png">
-    <img src="imagens/cachorro-quente.png">
-    <img src="imagens/bingo.png">
-</div>
-
-
-    
+    <div style="display:none;">
+        <img src="imagens/milho.png">
+        <img src="imagens/fogueira.png">
+        <img src="imagens/balão.png">
+        <img src="imagens/chapéu.png">
+        <img src="imagens/paçoca.png">
+        <img src="imagens/quentão.png">
+        <img src="imagens/canjica.png">
+        <img src="imagens/bandeirinha.png">
+        <img src="imagens/sanfona.png">
+        <img src="imagens/quadrilha.png">
+        <img src="imagens/pé-de-moleque.png">
+        <img src="imagens/cuscuz.png">
+        <img src="imagens/pinhão.png">
+        <img src="imagens/bolo.png">
+        <img src="imagens/cocada.png">
+        <img src="imagens/curau.png">
+        <img src="imagens/casal.png">
+        <img src="imagens/pescaria.png">
+        <img src="imagens/argola.png">
+        <img src="imagens/corrida-de-saco.png">
+        <img src="imagens/pau-de-sebo.png">
+        <img src="imagens/tiro-ao-alvo.png">
+        <img src="imagens/boca-do-palhaço.png">
+        <img src="imagens/espantalho.png">
+        <img src="imagens/tecido.png">
+        <img src="imagens/arroz.png">
+        <img src="imagens/maca-do-amor.png">
+        <img src="imagens/pipoca.png">
+        <img src="imagens/cachorro-quente.png">
+        <img src="imagens/bingo.png">
+    </div>
 </body>
 </html>

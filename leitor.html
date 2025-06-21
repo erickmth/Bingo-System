@@ -6,224 +6,8 @@
     <title>Leitor de QR Code - Identificação de Cartela</title>
     <link rel="icon" href="favicon.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="leitor.css">
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
-    <style>
-        :root {
-          --primary-color: #2c3e50;
-          --secondary-color: #ec3333;
-          --accent-color: #e74c3c;
-          --light-color: #ecf0f1;
-          --dark-color: #2c3e50;
-          --success-color: #27ae60;
-          --warning-color: #f39c12;
-          --border-radius: 12px;
-          --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-
-        body {
-          font-family: 'Roboto', sans-serif;
-          background-color: #f5f7fa;
-          color: var(--dark-color);
-          line-height: 1.6;
-        }
-
-        .container {
-          max-width: 800px;
-          width: 95%;
-          margin: 0 auto;
-          padding: 20px;
-          min-height: 100vh;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        }
-
-        header {
-          text-align: center;
-          margin-bottom: 30px;
-        }
-
-        header h1 {
-          color: var(--primary-color);
-          font-size: 1.8rem;
-          margin-bottom: 15px;
-        }
-
-        .qr-reader-area {
-          width: 100%;
-          max-width: 500px;
-          background-color: white;
-          border-radius: var(--border-radius);
-          padding: 20px;
-          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        }
-
-        .video-container {
-          width: 100%;
-          height: 300px;
-          background-color: var(--light-color);
-          border-radius: var(--border-radius);
-          overflow: hidden;
-          margin-bottom: 20px;
-          position: relative;
-        }
-
-        #qr-video {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-
-        .scan-line {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 3px;
-          background-color: var(--accent-color);
-          animation: scan 2s infinite linear;
-          box-shadow: 0 0 10px rgba(231, 76, 60, 0.7);
-        }
-
-        @keyframes scan {
-          0% { top: 0; }
-          100% { top: 100%; }
-        }
-
-        .result-container {
-          width: 100%;
-          margin-top: 15px;
-          padding: 15px;
-          background-color: var(--light-color);
-          border-radius: var(--border-radius);
-          word-break: break-all;
-          text-align: center;
-          font-size: 1rem;
-          display: none;
-        }
-
-        .cartela-result {
-          font-size: 1.5rem;
-          font-weight: bold;
-          color: var(--secondary-color);
-          margin-top: 10px;
-          display: none;
-        }
-
-        .action-buttons {
-          display: flex;
-          justify-content: center;
-          flex-wrap: wrap;
-          gap: 15px;
-          margin-top: 20px;
-          width: 100%;
-        }
-
-        .btn {
-          padding: 12px 24px;
-          border: none;
-          border-radius: var(--border-radius);
-          font-size: 1rem;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.3s;
-          min-width: 160px;
-        }
-
-        .btn-primary {
-          background-color: var(--secondary-color);
-          color: white;
-        }
-
-        .btn-primary:hover {
-          background-color: var(--accent-color);
-        }
-
-        .btn-secondary {
-          background-color: var(--primary-color);
-          color: white;
-        }
-
-        .btn-secondary:hover {
-          background-color: #34495e;
-        }
-
-        .btn-success {
-          background-color: var(--success-color);
-          color: white;
-        }
-
-        .btn-success:hover {
-          background-color: #219653;
-        }
-
-        .hidden {
-          display: none;
-        }
-
-        .status-message {
-          margin-top: 15px;
-          padding: 10px 15px;
-          border-radius: var(--border-radius);
-          font-size: 0.9rem;
-          text-align: center;
-          width: 100%;
-        }
-
-        .success {
-          background-color: rgba(39, 174, 96, 0.2);
-          color: var(--success-color);
-        }
-
-        .error {
-          background-color: rgba(231, 76, 60, 0.2);
-          color: var(--accent-color);
-        }
-
-        .scanning-mode .video-container,
-        .scanning-mode .scan-line {
-          display: block;
-        }
-
-        .scanning-mode .result-container,
-        .scanning-mode .cartela-result {
-          display: none;
-        }
-
-        .result-mode .video-container,
-        .result-mode .scan-line {
-          display: none;
-        }
-
-        .result-mode .result-container,
-        .result-mode .cartela-result {
-          display: block;
-        }
-
-        @media (max-width: 480px) {
-          .video-container {
-            height: 250px;
-          }
-          
-          header h1 {
-            font-size: 1.5rem;
-          }
-          
-          .btn {
-            padding: 10px 15px;
-            min-width: 120px;
-          }
-        }
-    </style>
 </head>
 <body>
     <div class="container">
@@ -232,7 +16,7 @@
         </header>
 
         <main>
-            <section class="qr-reader-area scanning-mode" id="qr-reader-area">
+            <section class="qr-reader-area">
                 <div class="video-container">
                     <video id="qr-video" playsinline></video>
                     <div class="scan-line"></div>
@@ -245,6 +29,23 @@
                 <div id="status-message" class="status-message hidden"></div>
             </section>
         </main>
+    </div>
+
+    <!-- Popup para registrar ganhador -->
+    <div id="winnerPopup" class="popup">
+        <div class="popup-content">
+            <span class="close-popup">&times;</span>
+            <h2>Registrar Ganhador</h2>
+            <div class="form-group">
+                <label for="winnerName">Nome do Ganhador:</label>
+                <input type="text" id="winnerName" placeholder="Digite o nome">
+            </div>
+            <div class="form-group">
+                <label>Cartela:</label>
+                <div id="cartelaNumber" style="font-weight: bold; padding: 10px; background-color: #f5f5f5; border-radius: 8px;"></div>
+            </div>
+            <button id="confirmWinner" class="btn-confirmar">Confirmar</button>
+        </div>
     </div>
 
     <script>
@@ -303,18 +104,22 @@
         const cartelaResult = document.getElementById('cartela-result');
         const scanAgainBtn = document.getElementById('scan-again-btn');
         const statusMessage = document.getElementById('status-message');
-        const qrReaderArea = document.getElementById('qr-reader-area');
+        
+        // Elementos do popup
+        const winnerPopup = document.getElementById('winnerPopup');
+        const closePopup = document.querySelector('.close-popup');
+        const confirmWinner = document.getElementById('confirmWinner');
+        const winnerNameInput = document.getElementById('winnerName');
+        const cartelaNumberDisplay = document.getElementById('cartelaNumber');
 
         // Variáveis de estado
         let scanning = true;
         let stream = null;
-        let animationFrameId = null;
+        let currentCartela = null;
 
         // Iniciar a câmera automaticamente
         async function startCamera() {
             try {
-                stopCamera(); // Parar qualquer stream existente
-                
                 stream = await navigator.mediaDevices.getUserMedia({ 
                     video: { 
                         facingMode: "environment",
@@ -323,39 +128,18 @@
                     } 
                 });
                 qrVideo.srcObject = stream;
-                await qrVideo.play();
-                setScanningMode();
-                scanQRCode();
+                qrVideo.onloadedmetadata = () => {
+                    qrVideo.play().then(() => {
+                        requestAnimationFrame(scanQRCode);
+                    }).catch(err => {
+                        console.error("Erro ao reproduzir vídeo:", err);
+                        showStatus("Erro ao acessar a câmera", "error");
+                    });
+                };
             } catch (err) {
                 console.error("Erro ao acessar a câmera:", err);
                 showStatus("Não foi possível acessar a câmera. Verifique as permissões.", "error");
             }
-        }
-
-        // Parar a câmera
-        function stopCamera() {
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-                qrVideo.srcObject = null;
-            }
-            if (animationFrameId) {
-                cancelAnimationFrame(animationFrameId);
-                animationFrameId = null;
-            }
-        }
-
-        // Modo de escaneamento (mostra câmera)
-        function setScanningMode() {
-            qrReaderArea.classList.remove('result-mode');
-            qrReaderArea.classList.add('scanning-mode');
-            scanAgainBtn.classList.add('hidden');
-        }
-
-        // Modo de resultado (mostra apenas resultados)
-        function setResultMode() {
-            qrReaderArea.classList.remove('scanning-mode');
-            qrReaderArea.classList.add('result-mode');
-            scanAgainBtn.classList.remove('hidden');
         }
 
         // Função para escanear continuamente o QR Code
@@ -377,7 +161,9 @@
 
                     if (code) {
                         const qrData = code.data.trim();
-                        handleQRCodeDetected(qrData);
+                        showQRResult(qrData);
+                        identifyCartela(qrData);
+                        scanning = false;
                     }
                 } catch (e) {
                     console.error("Erro ao ler QR Code:", e);
@@ -385,69 +171,137 @@
             }
 
             if (scanning) {
-                animationFrameId = requestAnimationFrame(scanQRCode);
+                requestAnimationFrame(scanQRCode);
             }
-        }
-
-        // Lidar com o QR code detectado
-        function handleQRCodeDetected(qrData) {
-            scanning = false;
-            stopCamera();
-            setResultMode();
-            
-            showQRResult(qrData);
-            identifyCartela(qrData);
         }
 
         // Mostrar resultado do QR Code
         function showQRResult(data) {
             qrResult.textContent = `Código lido: ${data}`;
+            qrResult.style.display = 'block';
         }
 
         // Identificar número da cartela
         function identifyCartela(qrData) {
             const numeroCartela = cartelas[qrData];
             
-            if (numeroCartela !== undefined) {
-                cartelaResult.textContent = `Cartela ${numeroCartela} - Válida!`;
-                cartelaResult.style.color = 'var(--success-color)';
-                showStatus("Cartela válida identificada!", "success");
+            if (numeroCartela) {
+                currentCartela = numeroCartela;
+                cartelaResult.textContent = `Cartela ${numeroCartela} - Parabéns!`;
+                cartelaResult.style.display = 'block';
+                scanAgainBtn.classList.remove('hidden');
+                
+                // Mostrar popup para registrar ganhador
+                showWinnerPopup(numeroCartela);
+                
+                // Tocar um som de confirmação (opcional)
+                playSuccessSound();
             } else {
                 cartelaResult.textContent = "Cartela não identificada";
-                cartelaResult.style.color = 'var(--accent-color)';
-                showStatus("Código QR não corresponde a nenhuma cartela válida", "error");
+                cartelaResult.style.display = 'block';
+                scanAgainBtn.classList.remove('hidden');
             }
+        }
+
+        // Mostrar popup para registrar ganhador
+        function showWinnerPopup(cartelaNumber) {
+            cartelaNumberDisplay.textContent = `Cartela ${cartelaNumber}`;
+            winnerNameInput.value = '';
+            winnerPopup.style.display = 'flex';
+            winnerNameInput.focus();
+        }
+
+        // Fechar popup
+        closePopup.addEventListener('click', () => {
+            winnerPopup.style.display = 'none';
+        });
+
+        // Confirmar ganhador
+        confirmWinner.addEventListener('click', async () => {
+            const nome = winnerNameInput.value.trim();
+            if (nome === '') {
+                showStatus("Por favor, digite o nome do ganhador", "error");
+                return;
+            }
+            
+            try {
+                // Primeiro obtemos os dados atuais
+                const response = await fetch('https://api.jsonbin.io/v3/b/68523cc48561e97a5026386a', {
+                    headers: {
+                        'X-Master-Key': '$2a$10$nGC0x4ZGIrrDOp.2XXhZ1.Fb9T2T.Fk05XB418S.9LZrzsdMvVHuS'
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Erro ao buscar dados');
+                
+                const data = await response.json();
+                const participantes = data.record.participantes || [];
+                
+                // Adiciona o novo participante
+                participantes.push(`${nome} (Cartela ${currentCartela})`);
+                
+                // Atualiza no jsonbin.io
+                const updateResponse = await fetch('https://api.jsonbin.io/v3/b/68523cc48561e97a5026386a', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': '$2a$10$nGC0x4ZGIrrDOp.2XXhZ1.Fb9T2T.Fk05XB418S.9LZrzsdMvVHuS'
+                    },
+                    body: JSON.stringify({
+                        ultimoQR: currentCartela,
+                        participantes: participantes
+                    })
+                });
+                
+                if (!updateResponse.ok) throw new Error('Erro ao atualizar dados');
+                
+                showStatus("Ganhador registrado com sucesso!", "success");
+                winnerPopup.style.display = 'none';
+                
+            } catch (error) {
+                console.error("Erro ao registrar ganhador:", error);
+                showStatus("Erro ao registrar ganhador. Tente novamente.", "error");
+            }
+        });
+
+        // Tocar som de sucesso (opcional)
+        function playSuccessSound() {
+            const audio = new Audio();
+            audio.src = "data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU..."; // Som curto base64
+            audio.play().catch(e => console.log("Não foi possível tocar o som:", e));
         }
 
         // Botão para ler outra cartela
         scanAgainBtn.addEventListener('click', () => {
-            resetScanner();
-            startCamera();
-        });
-
-        // Resetar o scanner
-        function resetScanner() {
+            qrResult.style.display = 'none';
+            cartelaResult.style.display = 'none';
+            scanAgainBtn.classList.add('hidden');
             scanning = true;
-            qrResult.textContent = '';
-            cartelaResult.textContent = '';
-            statusMessage.classList.add('hidden');
-        }
+            scanQRCode();
+        });
 
         // Mostrar mensagens de status
         function showStatus(message, type) {
             statusMessage.textContent = message;
             statusMessage.classList.remove('hidden', 'success', 'error', 'info');
             statusMessage.classList.add(type);
+            
+            // Esconder após 3 segundos
+            setTimeout(() => {
+                statusMessage.classList.add('hidden');
+            }, 3000);
         }
+
+        // Fechar ao clicar fora do popup
+        window.addEventListener('click', (e) => {
+            if (e.target === winnerPopup) {
+                winnerPopup.style.display = 'none';
+            }
+        });
 
         // Inicialização
         document.addEventListener('DOMContentLoaded', () => {
             startCamera();
-        });
-
-        // Limpar ao sair
-        window.addEventListener('beforeunload', () => {
-            stopCamera();
         });
     </script>
 </body>
