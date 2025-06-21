@@ -82,7 +82,7 @@ btnBingo.addEventListener('click', () => {
     }
     bingoPopup.style.display = 'flex';
     vencedorNomeInput.focus();
-    atualizarItensSorteados(); // Atualiza a lista quando o popup abre
+    atualizarItensSorteados();
 });
 
 // Fechar popup
@@ -119,13 +119,9 @@ pesquisaItem.addEventListener('input', () => {
 });
 
 function atualizarHistorico() {
-    // Limpa a lista
     listaSorteados.innerHTML = '';
-    
-    // Pega os últimos 3 itens (ou menos se não houver 3)
     const ultimosTres = sorteados.slice(-3).reverse();
     
-    // Adiciona os itens no histórico
     ultimosTres.forEach(index => {
         const imgItem = imagens[index];
         const item = document.createElement('div');
@@ -136,18 +132,14 @@ function atualizarHistorico() {
 }
 
 function atualizarItensSorteados() {
-    // Limpa a lista
     itensSorteadosLista.innerHTML = '';
-    
     const termoPesquisa = pesquisaItem.value.toLowerCase();
     
-    // Filtra os itens sorteados baseado na pesquisa
     const itensFiltrados = sorteados.filter(index => {
         const item = imagens[index];
         return item.nome.toLowerCase().includes(termoPesquisa);
     });
     
-    // Adiciona os itens na lista
     if (itensFiltrados.length > 0) {
         itensFiltrados.forEach(index => {
             const imgItem = imagens[index];
@@ -160,7 +152,6 @@ function atualizarItensSorteados() {
             itensSorteadosLista.appendChild(item);
         });
     } else if (termoPesquisa !== '') {
-        // Mostra mensagem de não encontrado apenas se houver termo de pesquisa
         const mensagem = document.createElement('div');
         mensagem.className = 'nao-encontrado';
         mensagem.textContent = 'Não encontrado...';
@@ -169,15 +160,14 @@ function atualizarItensSorteados() {
 }
 
 function atualizarVencedores() {
-    // Atualiza apenas os 3 primeiros lugares
     if (vencedores.length >= 1) {
-        vencedor1.textContent = `1º Lugar🥇 ${vencedores[0]}`;
+        vencedor3.textContent = `3º Lugar🥉 ${vencedores[vencedores.length-1]}`;
     }
     if (vencedores.length >= 2) {
-        vencedor2.textContent = `2º Lugar🥈 ${vencedores[1]}`;
+        vencedor2.textContent = `2º Lugar🥈 ${vencedores[vencedores.length-2]}`;
     }
     if (vencedores.length >= 3) {
-        vencedor3.textContent = `3º Lugar🥉 ${vencedores[2]}`;
+        vencedor1.textContent = `1º Lugar🥇 ${vencedores[vencedores.length-3]}`;
     }
 }
 
