@@ -9,6 +9,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
+
+    <!-- Crédito fixo no canto inferior esquerdo -->
+    <div class="credit-tag">Created by: <span>Erick Leguisamon</span></div>
+
     <div class="container">
         <header>
             <img src="imagens/logo.svg" alt="Logo INRB" class="logo">
@@ -82,7 +86,6 @@
                 const data = await response.json();
                 const participantes = data.record.participantes || [];
                 
-                // Atualiza os vencedores na tela na ordem 3º, 2º, 1º
                 if (participantes.length >= 1) {
                     document.getElementById('vencedor3').textContent = `3º Lugar🥉 ${participantes[participantes.length-1]}`;
                 }
@@ -97,10 +100,7 @@
             }
         }
 
-        // Polling a cada 3 segundos
         setInterval(fetchWinners, 3000);
-        
-        // Busca inicial
         fetchWinners();
     </script>
     <div style="display:none;">
