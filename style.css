@@ -23,6 +23,33 @@ body {
   line-height: 1.6;
 }
 
+/* ── Crédito fixo no canto inferior esquerdo ── */
+.credit-tag {
+  position: fixed;
+  bottom: 12px;
+  left: 14px;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: #8a95a3;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: 3px 8px;
+  border-radius: 20px;
+  border: 1px solid rgba(0,0,0,0.07);
+  z-index: 9999;
+  letter-spacing: 0.3px;
+  pointer-events: none;
+  user-select: none;
+  transition: opacity 0.3s;
+}
+
+.credit-tag span {
+  color: #ec3333;
+  font-weight: 700;
+}
+
+/* ── Layout ── */
 .container {
   max-width: 1000px;
   width: 95%;
@@ -41,6 +68,11 @@ header {
   max-width: 120px;
   height: auto;
   margin-bottom: 10px;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
 }
 
 header h1 {
@@ -71,6 +103,7 @@ header h1 {
   gap: 15px;
 }
 
+/* ── Área de sorteio ── */
 .sorteio-area {
   flex: 1;
   background-color: white;
@@ -92,6 +125,11 @@ header h1 {
   justify-content: center;
   margin-bottom: 20px;
   overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.current-image:has(img) {
+  box-shadow: 0 4px 18px rgba(236, 51, 51, 0.15);
 }
 
 .current-image img {
@@ -100,6 +138,7 @@ header h1 {
   object-fit: contain;
 }
 
+/* ── Painel direito ── */
 .right-panel {
   width: 300px;
   display: flex;
@@ -136,6 +175,12 @@ header h1 {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.item-sorteado:hover {
+  transform: scale(1.06);
+  border-color: #ccc;
 }
 
 .item-sorteado img {
@@ -144,6 +189,7 @@ header h1 {
   object-fit: cover;
 }
 
+/* ── Vencedores ── */
 .vencedores-list {
   display: flex;
   flex-direction: column;
@@ -156,8 +202,14 @@ header h1 {
   border-radius: var(--border-radius);
   font-weight: 500;
   font-size: 0.9rem;
+  transition: background-color 0.25s ease;
 }
 
+.vencedor:hover {
+  background-color: #dfe6e9;
+}
+
+/* ── Botões ── */
 .btn-sortear, .btn-bingo {
   padding: 10px 20px;
   border: none;
@@ -165,7 +217,7 @@ header h1 {
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.2s ease;
   margin: 5px;
 }
 
@@ -176,6 +228,12 @@ header h1 {
 
 .btn-sortear:hover {
   background-color: var(--accent-color);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(236, 51, 51, 0.35);
+}
+
+.btn-sortear:active {
+  transform: translateY(0);
 }
 
 .btn-bingo {
@@ -185,9 +243,15 @@ header h1 {
 
 .btn-bingo:hover {
   background-color: #219653;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.35);
 }
 
-/* Estilos do Popup */
+.btn-bingo:active {
+  transform: translateY(0);
+}
+
+/* ── Popup ── */
 .popup {
   display: none;
   position: fixed;
@@ -226,6 +290,12 @@ header h1 {
   font-size: 24px;
   cursor: pointer;
   color: var(--accent-color);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.close-popup:hover {
+  transform: scale(1.2);
+  color: var(--secondary-color);
 }
 
 .form-group {
@@ -244,6 +314,13 @@ header h1 {
   border: 1px solid #ddd;
   border-radius: var(--border-radius);
   font-size: 16px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+}
+
+.form-group input:focus {
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(236, 51, 51, 0.12);
 }
 
 .btn-confirmar {
@@ -255,12 +332,17 @@ header h1 {
   border-radius: var(--border-radius);
   font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.2s ease, transform 0.15s ease;
   margin-top: 15px;
 }
 
 .btn-confirmar:hover {
   background-color: #219653;
+  transform: translateY(-1px);
+}
+
+.btn-confirmar:active {
+  transform: translateY(0);
 }
 
 .itens-sorteados-container {
@@ -299,6 +381,11 @@ header h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition: background-color 0.2s ease;
+}
+
+.item-sorteado-popup:hover {
+  background-color: #dfe6e9;
 }
 
 .item-sorteado-popup img {
@@ -308,7 +395,7 @@ header h1 {
   margin-bottom: 3px;
 }
 
-/* Barra de rolagem personalizada */
+/* ── Scrollbar personalizada ── */
 .itens-sorteados-lista::-webkit-scrollbar {
   width: 6px;
 }
@@ -327,19 +414,72 @@ header h1 {
   background: #555;
 }
 
+/* ── Não encontrado ── */
+.nao-encontrado {
+  color: #ff0000;
+  font-weight: bold;
+  text-align: center;
+  padding: 20px;
+  font-size: 1.0em;
+  width: 100%;
+  display: block;
+}
+
+/* ── Sombras dos cards ── */
+.sorteio-area, .historico, .vencedores-box {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+/* ── Animações ── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.1); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes spin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes shake {
+  0%, 100%                           { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90%            { transform: translateX(-5px); }
+  20%, 40%, 60%, 80%                 { transform: translateX(5px); }
+}
+
+@keyframes bounceIn {
+  0%   { transform: scale(0.8); opacity: 0; }
+  50%  { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.current-image img {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.sortear-animacao  { animation: spin 0.5s linear; }
+.shake-animacao    { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+.sorteado-item     { animation: bounceIn 0.3s ease-out forwards; }
+
+/* ── Responsivo ── */
 @media (max-width: 768px) {
   .bingo-container {
     flex-direction: column;
   }
-  
+
   .right-panel {
     width: 100%;
   }
-  
+
   .creditos {
     position: static;
     margin-top: 5px;
     display: inline-block;
+  }
+
+  .credit-tag {
+    font-size: 0.6rem;
+    padding: 2px 7px;
   }
 }
 
@@ -348,119 +488,16 @@ header h1 {
     width: 180px;
     height: 180px;
   }
-  
+
   header h1 {
     font-size: 1.5rem;
   }
-  
+
   .popup-content {
     padding: 15px;
   }
-  
+
   .itens-sorteados-lista {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-
-.sorteio-area, .historico, .vencedores-box {
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-}
-.nao-encontrado {
-    color: #ff0000;
-    font-weight: bold;
-    text-align: center;
-    padding: 20px;
-    font-size: 1.0em;
-    width: 100%;
-    display: block;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Animação de fade-in para a imagem sorteada */
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.1); }
-    to { opacity: 1; transform: scale(1); }
-}
-
-/* Animação de rotação para o botão de sortear quando clicado */
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Animação de shake para quando a imagem é sorteada */
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-    20%, 40%, 60%, 80% { transform: translateX(5px); }
-}
-
-/* Animação de pulo para os itens no histórico */
-@keyframes bounceIn {
-    0% { transform: scale(0.8); opacity: 0; }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); opacity: 1; }
-}
-
-/* Aplica as animações */
-.current-image img {
-    animation: fadeIn 0.5s ease-out forwards;
-}
-
-.sortear-animacao {
-    animation: spin 0.5s linear;
-}
-
-.shake-animacao {
-    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-}
-
-.sorteado-item {
-    animation: bounceIn 0.3s ease-out forwards;
-}
-
-
-
-
-
