@@ -180,10 +180,13 @@
         <div class="fullscreen-modal-content">
             <img src="imagens/logo.svg" alt="Logo Instituto Robert Bosch" class="fullscreen-logo">
             <h2 id="fsTitle">Bingo Junino</h2>
-            <p>Para a melhor experiência durante o evento, recomendamos usar o modo tela cheia.</p>
+            <p>Para a melhor experiência durante o evento, abra em tela cheia.</p>
             <button id="btnFullscreen" class="btn btn-primary btn-full" style="margin-top:0">
                 <i data-lucide="maximize" width="18" height="18"></i>
-                Entrar em Tela Cheia
+                Abrir em Tela Cheia
+            </button>
+            <button id="btnDismissFs" class="btn btn-ghost btn-full" style="margin-top:10px">
+                Continuar sem tela cheia
             </button>
             <div class="fullscreen-hint">
                 <span>Ou pressione</span>
@@ -198,6 +201,8 @@
         // Inicializa Lucide após o script principal
         lucide.createIcons();
 
+        // ── Placar: mescla API + vencedores locais ──────────────────────────
+        // A API pode retornar lista vazia — nunca sobrescrever nomes locais com "Aguardando"
         async function fetchWinners() {
             try {
                 const response = await fetch('https://api.jsonbin.io/v3/b/68523cc48561e97a5026386a/latest', {
@@ -205,14 +210,31 @@
                 });
                 if (!response.ok) throw new Error();
                 const data = await response.json();
-                const p = data.record.participantes || [];
-                setWinnerName('nome3', p.length >= 1 ? p[p.length-1] : null);
-                setWinnerName('nome2', p.length >= 2 ? p[p.length-2] : null);
-                setWinnerName('nome1', p.length >= 3 ? p[p.length-3] : null);
-            } catch(e) { console.error(e); }
+                const apiList = data.record.participantes || [];
+
+                // Mescla: API tem prioridade, mas nunca apaga nomes locais já existentes
+                const merged = mergeWinners(apiList, vencedores);
+
+                renderWinnerName('nome1', merged[0] ?? null);
+                renderWinnerName('nome2', merged[1] ?? null);
+                renderWinnerName('nome3', merged[2] ?? null);
+            } catch(e) { /* silencioso — placar local continua visível */ }
         }
 
-        function setWinnerName(id, name) {
+        // Une as duas listas sem duplicatas, locais têm prioridade
+        function mergeWinners(apiList, localList) {
+            const seen = new Set();
+            const result = [];
+            for (const n of [...localList].reverse()) {
+                if (n && !seen.has(n)) { seen.add(n); result.push(n); }
+            }
+            for (const n of [...apiList].reverse()) {
+                if (n && !seen.has(n)) { seen.add(n); result.push(n); }
+            }
+            return result; // índice 0 = mais recente
+        }
+
+        function renderWinnerName(id, name) {
             const el = document.getElementById(id);
             if (!el) return;
             if (name) {
@@ -224,8 +246,38 @@
             }
         }
 
-        setInterval(fetchWinners, 3000);
+        setInterval(fetchWinners, 5000);
         fetchWinners();
+
+        // ── Popup tela cheia ────────────────────────────────────────────────
+        const fsModal   = document.getElementById('fullscreenModal');
+        const fsBtn     = document.getElementById('btnFullscreen');
+        const fsDismiss = document.getElementById('btnDismissFs');
+
+        function tryFullscreen() {
+            const el = document.documentElement;
+            const fn = el.requestFullscreen
+                    || el.webkitRequestFullscreen
+                    || el.mozRequestFullScreen
+                    || el.msRequestFullscreen;
+            if (fn) {
+                fn.call(el).catch(() => {});
+            }
+            fsModal.style.display = 'none';
+        }
+
+        fsBtn.addEventListener('click', tryFullscreen);
+        fsDismiss.addEventListener('click', () => { fsModal.style.display = 'none'; });
+        fsModal.addEventListener('click', e => { if (e.target === fsModal) fsModal.style.display = 'none'; });
+
+        // Mostra o modal imediatamente ao carregar
+        window.addEventListener('DOMContentLoaded', () => {
+            fsModal.style.display = 'flex';
+            lucide.createIcons();
+        });
+
+        document.addEventListener('fullscreenchange',       () => { if (document.fullscreenElement)       fsModal.style.display = 'none'; });
+        document.addEventListener('webkitfullscreenchange', () => { if (document.webkitFullscreenElement) fsModal.style.display = 'none'; });
     </script>
 
     <!-- Preload de imagens -->
