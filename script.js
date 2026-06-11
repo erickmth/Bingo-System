@@ -243,6 +243,7 @@ function atualizarItensSorteados() {
 
 // ─── Vencedores ───────────────────────────────────────────────────────────────
 function atualizarVencedores() {
+    // índice 0 = mais recente (1º lugar)
     const setName = (id, name) => {
         const el = document.getElementById(id);
         if (!el) return;
@@ -255,9 +256,11 @@ function atualizarVencedores() {
         }
     };
 
-    setName('nome3', vencedores.length >= 1 ? vencedores[vencedores.length - 1] : null);
-    setName('nome2', vencedores.length >= 2 ? vencedores[vencedores.length - 2] : null);
-    setName('nome1', vencedores.length >= 3 ? vencedores[vencedores.length - 3] : null);
+    // vencedores[0] = primeiro a fazer bingo, vencedores[last] = mais recente
+    const last = vencedores.length - 1;
+    setName('nome1', vencedores[last]     ?? null);
+    setName('nome2', vencedores[last - 1] ?? null);
+    setName('nome3', vencedores[last - 2] ?? null);
 }
 
 // Init
@@ -265,45 +268,6 @@ atualizarHistorico();
 ringFill.style.strokeDasharray  = CIRCUMFERENCE;
 ringFill.style.strokeDashoffset = CIRCUMFERENCE;
 
-// ─── Tela cheia ───────────────────────────────────────────────────────────────
-const fullscreenModal = document.getElementById('fullscreenModal');
-const btnFullscreen   = document.getElementById('btnFullscreen');
-
-function isFullscreen() {
-    return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement);
-}
-
-function requestFullscreen() {
-    const el = document.documentElement;
-    if (el.requestFullscreen)       el.requestFullscreen();
-    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-    else if (el.mozRequestFullScreen)    el.mozRequestFullScreen();
-}
-
-// Mostra o modal ao carregar se ainda não estiver em fullscreen
-window.addEventListener('load', () => {
-    if (!isFullscreen()) {
-        fullscreenModal.style.display = 'flex';
-        // Re-renderiza ícones Lucide dentro do modal
-        if (window.lucide) lucide.createIcons();
-    }
-});
-
-btnFullscreen.addEventListener('click', () => {
-    requestFullscreen();
-    fullscreenModal.style.display = 'none';
-});
-
-// Fecha o modal se o usuário entrar em fullscreen por conta própria (F11)
-document.addEventListener('fullscreenchange',       onFsChange);
-document.addEventListener('webkitfullscreenchange', onFsChange);
-document.addEventListener('mozfullscreenchange',    onFsChange);
-
-function onFsChange() {
-    if (isFullscreen()) fullscreenModal.style.display = 'none';
-}
-
-// Fechar modal sem entrar em fullscreen clicando fora
-fullscreenModal.addEventListener('click', e => {
-    if (e.target === fullscreenModal) fullscreenModal.style.display = 'none';
-});
+// ─── Tela cheia (fallback caso o script inline do HTML não seja suficiente) ───
+// A lógica principal está no script inline em index.html para garantir
+// que rode após o DOMContentLoaded e após o lucide.createIcons().
