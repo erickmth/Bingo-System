@@ -3,13 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bingo Junino - INRB</title>
+    <title>Bingo Junino - Instituto Robert Bosch</title>
     <link rel="icon" type="image/x-icon" href="favicon.png">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
 <body>
+
+    <!-- Toast container -->
+    <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
 
     <div class="credit-tag">Created by: <span>Erick Leguisamon</span></div>
 
@@ -19,14 +24,16 @@
         <header class="site-header">
             <div class="header-inner">
                 <div class="header-brand">
-                    <img src="imagens/logo.svg" alt="Logo INRB" class="logo">
+                    <img src="imagens/logo.svg" alt="Logo Instituto Robert Bosch" class="logo">
                     <div class="header-titles">
                         <h1 class="site-title">Bingo Junino</h1>
-                        <span class="site-sub">INRB · Formare 2025</span>
+                        <span class="site-sub">Instituto Robert Bosch</span>
                     </div>
                 </div>
                 <div class="header-badge">
-                    <span id="headerCount">0</span><span class="badge-total">/30</span>
+                    <div class="header-badge-count">
+                        <span id="headerCount">0</span><span class="badge-total">/30</span>
+                    </div>
                     <span class="badge-label">sorteados</span>
                 </div>
             </div>
@@ -41,9 +48,9 @@
 
                 <div class="stage-wrapper">
                     <!-- Anel de progresso SVG -->
-                    <svg class="progress-ring" viewBox="0 0 260 260" aria-hidden="true">
-                        <circle class="ring-track" cx="130" cy="130" r="118"/>
-                        <circle class="ring-fill" id="ringFill" cx="130" cy="130" r="118"/>
+                    <svg class="progress-ring" viewBox="0 0 320 320" aria-hidden="true">
+                        <circle class="ring-track" cx="160" cy="160" r="145"/>
+                        <circle class="ring-fill" id="ringFill" cx="160" cy="160" r="145"/>
                     </svg>
                     <div class="current-image" id="imagemSorteada">
                         <p class="placeholder-text">Clique em<br><strong>Sortear</strong></p>
@@ -54,11 +61,12 @@
 
                 <div class="btn-row">
                     <button id="btnSortear" class="btn btn-primary">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+                        <i data-lucide="shuffle" width="18" height="18"></i>
                         Sortear
                     </button>
                     <button id="btnBingo" class="btn btn-success">
-                        🎉 BINGO!
+                        <i data-lucide="party-popper" width="18" height="18"></i>
+                        BINGO!
                     </button>
                 </div>
             </section>
@@ -72,25 +80,41 @@
                     <div id="listaSorteados" class="sorteados-grid"></div>
                 </div>
 
-                <!-- VENCEDORES -->
+                <!-- VENCEDORES / PLACAR -->
                 <div class="card vencedores-card">
                     <div class="card-eyebrow">Placar</div>
                     <div class="vencedores-list">
+
                         <div class="vencedor vencedor--gold" id="vencedor1">
-                            <span class="medal">🥇</span>
-                            <span class="venc-lugar">1º Lugar</span>
-                            <span class="venc-nome" id="nome1">—</span>
+                            <div class="medal-icon">
+                                <i data-lucide="trophy" width="18" height="18"></i>
+                            </div>
+                            <div class="venc-info">
+                                <span class="venc-lugar">1º Lugar</span>
+                                <span class="venc-nome empty" id="nome1">Aguardando…</span>
+                            </div>
                         </div>
+
                         <div class="vencedor vencedor--silver" id="vencedor2">
-                            <span class="medal">🥈</span>
-                            <span class="venc-lugar">2º Lugar</span>
-                            <span class="venc-nome" id="nome2">—</span>
+                            <div class="medal-icon">
+                                <i data-lucide="medal" width="18" height="18"></i>
+                            </div>
+                            <div class="venc-info">
+                                <span class="venc-lugar">2º Lugar</span>
+                                <span class="venc-nome empty" id="nome2">Aguardando…</span>
+                            </div>
                         </div>
+
                         <div class="vencedor vencedor--bronze" id="vencedor3">
-                            <span class="medal">🥉</span>
-                            <span class="venc-lugar">3º Lugar</span>
-                            <span class="venc-nome" id="nome3">—</span>
+                            <div class="medal-icon">
+                                <i data-lucide="award" width="18" height="18"></i>
+                            </div>
+                            <div class="venc-info">
+                                <span class="venc-lugar">3º Lugar</span>
+                                <span class="venc-nome empty" id="nome3">Aguardando…</span>
+                            </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -99,17 +123,21 @@
     </div>
 
     <!-- POPUP DE BINGO -->
-    <div id="bingoPopup" class="popup">
+    <div id="bingoPopup" class="popup" role="dialog" aria-modal="true" aria-labelledby="bingoPopupTitle">
         <div class="popup-content">
-            <button class="close-popup" aria-label="Fechar">&times;</button>
+            <button class="close-popup" aria-label="Fechar">
+                <i data-lucide="x" width="18" height="18"></i>
+            </button>
             <div class="popup-header">
-                <span class="popup-icon">🎊</span>
-                <h2>Registrar Bingo</h2>
+                <div class="popup-icon-wrap">
+                    <i data-lucide="star" width="28" height="28"></i>
+                </div>
+                <h2 id="bingoPopupTitle">Registrar Bingo</h2>
             </div>
 
             <div class="form-group">
                 <label for="vencedorNome">Nome do vencedor</label>
-                <input type="text" id="vencedorNome" placeholder="Digite o nome completo">
+                <input type="text" id="vencedorNome" placeholder="Digite o nome completo" autocomplete="off">
             </div>
 
             <div class="form-group">
@@ -122,12 +150,36 @@
                 <div id="itensSorteadosLista" class="itens-sorteados-lista"></div>
             </div>
 
-            <button id="confirmarBingo" class="btn btn-success btn-full">Confirmar Bingo</button>
+            <button id="confirmarBingo" class="btn btn-success btn-full">
+                <i data-lucide="check-circle" width="18" height="18"></i>
+                Confirmar Bingo
+            </button>
+        </div>
+    </div>
+
+    <!-- CONFIRM MODAL (substitui alert/confirm nativos) -->
+    <div id="confirmModal" class="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+        <div class="confirm-modal-content">
+            <div class="confirm-icon">
+                <i data-lucide="alert-circle" width="28" height="28"></i>
+            </div>
+            <h3 id="confirmTitle">Atenção</h3>
+            <p id="confirmMessage">Mensagem aqui</p>
+            <div class="confirm-actions">
+                <button id="confirmOk" class="btn btn-primary">
+                    <i data-lucide="check" width="16" height="16"></i>
+                    OK
+                </button>
+                <button id="confirmCancel" class="btn btn-ghost" style="display:none">Cancelar</button>
+            </div>
         </div>
     </div>
 
     <script src="script.js"></script>
     <script>
+        // Inicializa Lucide após o script principal
+        lucide.createIcons();
+
         async function fetchWinners() {
             try {
                 const response = await fetch('https://api.jsonbin.io/v3/b/68523cc48561e97a5026386a/latest', {
@@ -136,17 +188,30 @@
                 if (!response.ok) throw new Error();
                 const data = await response.json();
                 const p = data.record.participantes || [];
-                if (p.length >= 1) document.getElementById('nome3').textContent = p[p.length-1];
-                if (p.length >= 2) document.getElementById('nome2').textContent = p[p.length-2];
-                if (p.length >= 3) document.getElementById('nome1').textContent = p[p.length-3];
+                setWinnerName('nome3', p.length >= 1 ? p[p.length-1] : null);
+                setWinnerName('nome2', p.length >= 2 ? p[p.length-2] : null);
+                setWinnerName('nome1', p.length >= 3 ? p[p.length-3] : null);
             } catch(e) { console.error(e); }
         }
+
+        function setWinnerName(id, name) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (name) {
+                el.textContent = name;
+                el.classList.remove('empty');
+            } else {
+                el.textContent = 'Aguardando…';
+                el.classList.add('empty');
+            }
+        }
+
         setInterval(fetchWinners, 3000);
         fetchWinners();
     </script>
 
     <!-- Preload de imagens -->
-    <div style="display:none;">
+    <div style="display:none;" aria-hidden="true">
         <img src="imagens/milho.png"><img src="imagens/fogueira.png"><img src="imagens/balão.png">
         <img src="imagens/chapéu.png"><img src="imagens/paçoca.png"><img src="imagens/quentão.png">
         <img src="imagens/canjica.png"><img src="imagens/bandeirinha.png"><img src="imagens/sanfona.png">
