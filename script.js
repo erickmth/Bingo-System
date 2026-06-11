@@ -264,3 +264,46 @@ function atualizarVencedores() {
 atualizarHistorico();
 ringFill.style.strokeDasharray  = CIRCUMFERENCE;
 ringFill.style.strokeDashoffset = CIRCUMFERENCE;
+
+// ─── Tela cheia ───────────────────────────────────────────────────────────────
+const fullscreenModal = document.getElementById('fullscreenModal');
+const btnFullscreen   = document.getElementById('btnFullscreen');
+
+function isFullscreen() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement);
+}
+
+function requestFullscreen() {
+    const el = document.documentElement;
+    if (el.requestFullscreen)       el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    else if (el.mozRequestFullScreen)    el.mozRequestFullScreen();
+}
+
+// Mostra o modal ao carregar se ainda não estiver em fullscreen
+window.addEventListener('load', () => {
+    if (!isFullscreen()) {
+        fullscreenModal.style.display = 'flex';
+        // Re-renderiza ícones Lucide dentro do modal
+        if (window.lucide) lucide.createIcons();
+    }
+});
+
+btnFullscreen.addEventListener('click', () => {
+    requestFullscreen();
+    fullscreenModal.style.display = 'none';
+});
+
+// Fecha o modal se o usuário entrar em fullscreen por conta própria (F11)
+document.addEventListener('fullscreenchange',       onFsChange);
+document.addEventListener('webkitfullscreenchange', onFsChange);
+document.addEventListener('mozfullscreenchange',    onFsChange);
+
+function onFsChange() {
+    if (isFullscreen()) fullscreenModal.style.display = 'none';
+}
+
+// Fechar modal sem entrar em fullscreen clicando fora
+fullscreenModal.addEventListener('click', e => {
+    if (e.target === fullscreenModal) fullscreenModal.style.display = 'none';
+});
