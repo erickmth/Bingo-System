@@ -242,8 +242,9 @@ function atualizarItensSorteados() {
 }
 
 // ─── Vencedores ───────────────────────────────────────────────────────────────
+// Posições fixas: 1º bingo -> 3º lugar, 2º bingo -> 2º lugar, 3º bingo -> 1º lugar
+// Após o 3º, não desloca mais (posições permanecem fixas)
 function atualizarVencedores() {
-    // índice 0 = mais recente (1º lugar)
     const setName = (id, name) => {
         const el = document.getElementById(id);
         if (!el) return;
@@ -256,11 +257,9 @@ function atualizarVencedores() {
         }
     };
 
-    // vencedores[0] = primeiro a fazer bingo, vencedores[last] = mais recente
-    const last = vencedores.length - 1;
-    setName('nome1', vencedores[last]     ?? null);
-    setName('nome2', vencedores[last - 1] ?? null);
-    setName('nome3', vencedores[last - 2] ?? null);
+    setName('nome3', vencedores[0] ?? null); // 1º bingo
+    setName('nome2', vencedores[1] ?? null); // 2º bingo
+    setName('nome1', vencedores[2] ?? null); // 3º bingo
 }
 
 // Init
