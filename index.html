@@ -10,6 +10,66 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+        /* --- Botão minimalista preto e branco para baixar cartelas --- */
+        .download-cartelas-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: #1e1e2f;
+            color: #f5f5f7;
+            border: 1px solid #2c2c3a;
+            border-radius: 40px;
+            padding: 8px 18px;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            backdrop-filter: blur(8px);
+            background-color: rgba(20, 20, 28, 0.92);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .download-cartelas-btn:hover {
+            background-color: #0f0f14;
+            border-color: #3a3a4a;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+        }
+
+        .download-cartelas-btn:active {
+            transform: translateY(1px);
+        }
+
+        .download-cartelas-btn i {
+            width: 16px;
+            height: 16px;
+            stroke-width: 1.8;
+        }
+
+        /* Ajuste responsivo: mobile fica menor e mais discreto */
+        @media (max-width: 640px) {
+            .download-cartelas-btn {
+                padding: 6px 14px;
+                font-size: 0.7rem;
+                bottom: 16px;
+                right: 16px;
+                gap: 6px;
+            }
+            .download-cartelas-btn i {
+                width: 14px;
+                height: 14px;
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -121,6 +181,17 @@
             </aside>
         </main>
     </div>
+
+    <!-- BOTÃO MINIMALISTA PRETO E BRANCO - BAIXAR CARTELAS (30 unidades) -->
+    <a href="https://drive.google.com/uc?export=download&id=1F3SsooMFLVH7Z4M4aWO1bBZhTOVsT05b" 
+       class="download-cartelas-btn" 
+       download 
+       target="_blank" 
+       rel="noopener noreferrer"
+       title="Baixar cartelas em PDF">
+        <i data-lucide="file-down" width="16" height="16"></i>
+        Baixar Cartelas (30 unidades)
+    </a>
 
     <!-- POPUP DE BINGO -->
     <div id="bingoPopup" class="popup" role="dialog" aria-modal="true" aria-labelledby="bingoPopupTitle">
@@ -275,10 +346,22 @@
         window.addEventListener('DOMContentLoaded', () => {
             fsModal.style.display = 'flex';
             lucide.createIcons();
+            // Reaplicar ícones do botão download manualmente
+            const downloadIcon = document.querySelector('.download-cartelas-btn i');
+            if (downloadIcon && downloadIcon.getAttribute('data-lucide')) {
+                lucide.createIcons({ icons: { 'file-down': downloadIcon } });
+            }
         });
 
         document.addEventListener('fullscreenchange',       () => { if (document.fullscreenElement)       fsModal.style.display = 'none'; });
         document.addEventListener('webkitfullscreenchange', () => { if (document.webkitFullscreenElement) fsModal.style.display = 'none'; });
+        
+        // garantir que ícones lucide funcionem também no botão adicionado
+        setTimeout(() => {
+            if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                lucide.createIcons();
+            }
+        }, 100);
     </script>
 
     <!-- Preload de imagens -->
