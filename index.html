@@ -212,26 +212,27 @@
                 const data = await response.json();
                 const apiList = data.record.participantes || [];
 
-                // Mescla: API tem prioridade, mas nunca apaga nomes locais já existentes
+                // Mescla: posições fixas (1º bingo->3º lugar, 2º->2º, 3º->1º)
+                // API tem prioridade, mas nunca apaga nomes locais já existentes
                 const merged = mergeWinners(apiList, vencedores);
 
-                renderWinnerName('nome1', merged[0] ?? null);
+                renderWinnerName('nome3', merged[0] ?? null);
                 renderWinnerName('nome2', merged[1] ?? null);
-                renderWinnerName('nome3', merged[2] ?? null);
+                renderWinnerName('nome1', merged[2] ?? null);
             } catch(e) { /* silencioso — placar local continua visível */ }
         }
 
-        // Une as duas listas sem duplicatas, locais têm prioridade
+        // Une as duas listas sem duplicatas, locais têm prioridade, ordem de chegada preservada
         function mergeWinners(apiList, localList) {
             const seen = new Set();
             const result = [];
-            for (const n of [...localList].reverse()) {
+            for (const n of localList) {
                 if (n && !seen.has(n)) { seen.add(n); result.push(n); }
             }
-            for (const n of [...apiList].reverse()) {
+            for (const n of apiList) {
                 if (n && !seen.has(n)) { seen.add(n); result.push(n); }
             }
-            return result; // índice 0 = mais recente
+            return result; // índice 0 = primeiro bingo
         }
 
         function renderWinnerName(id, name) {
